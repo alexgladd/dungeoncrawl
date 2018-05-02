@@ -1,0 +1,9 @@
+/* footer css */
+
+.Footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  font-size: 0.75em;
+  text-align: center;
+}
