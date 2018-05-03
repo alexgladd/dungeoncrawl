@@ -5,6 +5,7 @@ import { GameStates } from '../actions/game';
 
 const defaultGameState = {
   state: GameStates.new,
+  playerTurn: true,
   floor: 9,
   turn: 0,
   score: 0

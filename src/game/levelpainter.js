@@ -5,7 +5,7 @@ class LevelPainter {
     this.ctx = canvas.getContext('2d', { alpha: false });
   }
 
-  repaint(level) {
+  repaint(level, hero) {
     // clear
     this.ctx.fillStyle = 'black';
     this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
@@ -27,6 +27,9 @@ class LevelPainter {
     // spawn/exit
     this._paintTile(level.spawnLocation.x, level.spawnLocation.y, { type: 'spawn' }, level.tileSize);
     this._paintTile(level.exitLocation.x, level.exitLocation.y, { type: 'exit' }, level.tileSize);
+
+    // hero
+    this._paintTile(hero.position.x, hero.position.y, { type: 'hero'}, level.tileSize);
   }
 
   _paintTile(x, y, tile, tileSize) {
@@ -47,6 +50,10 @@ class LevelPainter {
       
       case 'exit':
         tileColor = 'red';
+        break;
+      
+      case 'hero':
+        tileColor = 'gold';
         break;
       
       default:

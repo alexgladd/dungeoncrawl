@@ -9,6 +9,8 @@ import { loadNextLevel } from '../actions/global';
 import { teleportHero } from '../actions/hero';
 
 import LevelPainter from '../game/levelpainter';
+import { Hero } from '../game/entities';
+import { Movement } from '../game/actions';
 
 // map helpers
 const getMapWidth = () => {
@@ -31,6 +33,24 @@ class Game extends React.Component {
 
   handleGlobalKeyDown(evt) {
     console.log('Global key down', evt);
+    const { game, hero, level, moveHero } = this.props;
+
+    if (game.playerTurn) {
+      // handle hero actions
+      const eHero = Hero.fromState(hero);
+      let action = null;
+      if (evt.key === 'ArrowUp' || evt.key === 'w') {
+        action = Movement.createAction(eHero, 'north', level);
+      } else if (evt.key === 'ArrowDown' || evt.key === 's') {
+        action = Movement.createAction(eHero, 'south', level);
+      } else if (evt.key === 'ArrowLeft' || evt.key === 'a') {
+        action = Movement.createAction(eHero, 'west', level);
+      } else if (evt.key === 'ArrowRight' || evt.key === 'd') {
+        action = Movement.createAction(eHero, 'east', level);
+      }
+
+      if (action) moveHero(action);
+    }
   }
 
   componentDidMount() {
@@ -55,7 +75,7 @@ class Game extends React.Component {
     if (hero.position === null) {
       this.props.spawnHero(level);
     } else {
-      this.levelPainter.repaint(level);
+      this.levelPainter.repaint(level, hero);
     }
   }
 
@@ -78,7 +98,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   nextLevel() { dispatch(loadNextLevel()); },
-  spawnHero(level) { dispatch(teleportHero(level.spawnLocation)); }
+  spawnHero(level) { dispatch(teleportHero(level.spawnLocation)); },
+  moveHero(action) { dispatch(action); }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

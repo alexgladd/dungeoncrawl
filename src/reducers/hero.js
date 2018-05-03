@@ -2,6 +2,7 @@
 
 import { GlobalActions } from '../actions/global';
 import { HeroActions } from '../actions/hero';
+import { Movement } from '../game/actions';
 
 const testHeroState = {
   name: 'John Smith',
@@ -15,6 +16,9 @@ const heroReducer = (state=testHeroState, action) => {
     
     case GlobalActions.nextLevel:
       return { ...state, position: null };
+    
+    case HeroActions.move:
+      return { ...state, position: Movement.movePosition(state.position, action.direction) }
     
     case HeroActions.teleport:
       return { ...state, position: action.position };
