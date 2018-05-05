@@ -1,8 +1,5 @@
 // game actions
 
-import { Hero } from './entities';
-import { HeroActions } from '../actions/hero';
-
 export class Movement {
   static createAction(entity, direction, level) {
     const eTile = level.tiles[entity.position.x][entity.position.y];
@@ -10,7 +7,7 @@ export class Movement {
 
     if (dTile && (dTile.type === 'floor' || dTile.type === 'door')) {
       // valid move
-      return { type: Movement._getActionType(entity), direction };
+      return direction ;
     } else {
       return null;
     }
@@ -18,16 +15,16 @@ export class Movement {
 
   static movePosition(position, direction) {
     switch (direction) {
-      case 'north':
+      case Movement.NORTH:
         return { x: position.x, y: position.y - 1 };
       
-      case 'east':
+      case Movement.EAST:
         return { x: position.x + 1, y: position.y };
       
-      case 'south':
+      case Movement.SOUTH:
         return { x: position.x, y: position.y + 1 };
       
-      case 'west':
+      case Movement.WEST:
         return { x: position.x - 1, y: position.y };
       
       default:
@@ -35,14 +32,9 @@ export class Movement {
         return position;
     }
   }
-
-  static _getActionType(entity) {
-    switch (entity.type) {
-      case Hero.type:
-        return HeroActions.move;
-      
-      default:
-        return 'UNKNOWN_ENTITY_MOVE_ACTION';
-    }
-  }
 }
+
+Movement.NORTH = 'north';
+Movement.SOUTH = 'south';
+Movement.EAST = 'east';
+Movement.WEST = 'west';

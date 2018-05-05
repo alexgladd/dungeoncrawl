@@ -6,7 +6,7 @@ import './Game.css';
 
 import { connect } from 'react-redux';
 import { loadNextLevel } from '../actions/global';
-import { teleportHero } from '../actions/hero';
+import { moveHero, teleportHero } from '../actions/hero';
 
 import LevelPainter from '../game/levelpainter';
 import { Hero } from '../game/entities';
@@ -33,23 +33,23 @@ class Game extends React.Component {
 
   handleGlobalKeyDown(evt) {
     console.log('Global key down', evt);
-    const { game, hero, level, moveHero } = this.props;
+    const { game, hero, level, moveHeroDirection } = this.props;
 
     if (game.playerTurn) {
       // handle hero actions
       const eHero = Hero.fromState(hero);
-      let action = null;
+      let dir = null;
       if (evt.key === 'ArrowUp' || evt.key === 'w') {
-        action = Movement.createAction(eHero, 'north', level);
+        dir = Movement.createAction(eHero, Movement.NORTH, level);
       } else if (evt.key === 'ArrowDown' || evt.key === 's') {
-        action = Movement.createAction(eHero, 'south', level);
+        dir = Movement.createAction(eHero, Movement.SOUTH, level);
       } else if (evt.key === 'ArrowLeft' || evt.key === 'a') {
-        action = Movement.createAction(eHero, 'west', level);
+        dir = Movement.createAction(eHero, Movement.WEST, level);
       } else if (evt.key === 'ArrowRight' || evt.key === 'd') {
-        action = Movement.createAction(eHero, 'east', level);
+        dir = Movement.createAction(eHero, Movement.EAST, level);
       }
 
-      if (action) moveHero(action);
+      if (dir) moveHeroDirection(dir);
     }
   }
 
@@ -99,7 +99,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   nextLevel() { dispatch(loadNextLevel()); },
   spawnHero(level) { dispatch(teleportHero(level.spawnLocation)); },
-  moveHero(action) { dispatch(action); }
+  moveHeroDirection(direction) { dispatch(moveHero(direction)); }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
